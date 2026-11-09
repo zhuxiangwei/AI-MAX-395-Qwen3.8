@@ -1,0 +1,5 @@
+# 部署目标为 Linux，统一 LF，避免 Windows 端 autocrlf 污染配置副本
+* text eol=lf
+*.gguf binary
+*.png binary
+*.jpg binary

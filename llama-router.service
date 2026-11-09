@@ -1,0 +1,18 @@
+[Unit]
+Description=llama.cpp Router Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStartPre=/bin/bash /home/user/scripts/rocm-wait-devices.sh 90
+ExecStart=/home/user/scripts/llama-router.sh
+LimitMEMLOCK=infinity
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=300
+TimeoutStopSec=35
+KillMode=process
+
+[Install]
+WantedBy=default.target

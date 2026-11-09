@@ -1,0 +1,19 @@
+[Unit]
+Description=Strata server (Qwen3.8-Flash-Next UD-Q6_K_XL (cache-first: 15256 slots + 35G resident + MTP + vision))
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/home/user/Strata
+ExecStartPre=/bin/bash /home/user/scripts/rocm-wait-devices.sh 90
+ExecStartPre=-/bin/bash -c 'p=$(ss -ltnp 2>/dev/null | grep ":8080" | grep -oE "pid=[0-9]+" | cut -d= -f2 | head -1); [ -n "$p" ] && kill $p && sleep 4 || true'
+ExecStart=/home/user/Strata/.venv/bin/python /home/user/Strata/serve/server.py --engine strata --config /home/user/Strata/strata-unsloth-ud-q6_k_xl.json --port 8080
+Restart=on-failure
+RestartSec=15
+StandardOutput=append:/home/user/logs/strata/run.log
+StandardError=append:/home/user/logs/strata/run.log
+
+[Install]
+WantedBy=default.target
